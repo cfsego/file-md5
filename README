@@ -1,0 +1,19 @@
+ngx_http_file_md5_module
+===========================================
+
+1. OVERVIEW
+
+set md5 of a static file to variable 'file_md5'
+
+2. USAGE
+
+server {
+    listen 3111;
+    add_header Content-MD5 $file_md5;
+}
+
+the example shows how you set HTTP header 'Content-MD5' with file md5
+
+3. LIMITATION
+
+support only static files, proxy is beyond his ability
