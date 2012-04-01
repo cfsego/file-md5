@@ -57,11 +57,12 @@ static ngx_int_t
 ngx_http_file_md5_variable(ngx_http_request_t *r,
     ngx_http_variable_value_t *v, uintptr_t data)
 {
-    off_t                      size, n;
+    off_t                      size, n, i;
     u_char                    *last, buf[8192], md5[16];
     size_t                     root, len;
     ngx_str_t                  path;
     ngx_log_t                 *log;
+    ngx_int_t                  bval;
     ngx_md5_t                  ctx;
     ngx_open_file_info_t       of;
     ngx_http_core_loc_conf_t  *clcf;
@@ -136,12 +137,10 @@ ngx_http_file_md5_variable(ngx_http_request_t *r,
         return NGX_ERROR;
     }
 
-    ngx_snprintf(v->data, 32,
-                 "%02xi%02xi%02xi%02xi%02xi%02xi%02xi%02xi%02xi%02xi%02xi%02xi%02xi%02xi%02xi%02xi",
-                 md5[0],  md5[1],  md5[2],  md5[3],
-                 md5[4],  md5[5],  md5[6],  md5[7],
-                 md5[8],  md5[9],  md5[10], md5[11],
-                 md5[12], md5[13], md5[14], md5[15]);
+    for (i = 0; i < 16; i++) {
+        bval = md5[i];
+        last = ngx_sprintf(last, "%02xi", bval);
+    }
 
     v->no_cacheable = 0;
     v->valid = 1;
